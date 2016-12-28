@@ -54,14 +54,13 @@ private:
 
 
 public:
+	static vector< vector<int> > vehiclePositionIndicesStack;
 
 	ArrangementNode(vector< vector< vector<int> > > allAchievablePositions, vector<int> vehiclePositionIndices, vector<int> squaresOccupationStatus);
 
 	ArrangementNode returnNextArrangement();
 
 	void printNode();
-
-	ArrangementNode *parent;
 
 	int level;
 

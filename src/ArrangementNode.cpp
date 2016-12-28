@@ -13,6 +13,7 @@ using namespace std;
 
 
 vector< vector<int> > ArrangementNode::visitedIndicesCombos;
+vector< vector<int> > ArrangementNode::vehiclePositionIndicesStack;
 
 
 
@@ -40,8 +41,9 @@ ArrangementNode::ArrangementNode(vector< vector< vector<int> > > allAchievablePo
 
 void ArrangementNode::moveVehicle(int changedVehicleIndex, int moveDirection) {
 	int newPositionIndex = this->vehiclePositionIndices[changedVehicleIndex] + moveDirection;
-	this->setVehiclePositionIndices(changedVehicleIndex, newPositionIndex);
 	this->setSquaresOccupationStatus(changedVehicleIndex, newPositionIndex);
+	//crucial that setVehiclePositionIndices() come AFTER setSquaresOccupationStatus()
+	this->setVehiclePositionIndices(changedVehicleIndex, newPositionIndex);
 }
 
 
@@ -73,15 +75,13 @@ void ArrangementNode::setVehiclePositionIndices(int changedVehicleIndex, int new
 
 
 void ArrangementNode::setSquaresOccupationStatus(int changedVehicleIndex, int newPositionIndex) {
+
 	int oldChangedVehiclePositionIndex = this->vehiclePositionIndices[changedVehicleIndex];
 	vector <int> oldChangedVehiclePosition = this->allAchievablePositions[changedVehicleIndex][oldChangedVehiclePositionIndex];
 	vector <int> newChangedVehiclePosition = this->allAchievablePositions[changedVehicleIndex][newPositionIndex];
-
-
 	int squareLeft;
 	int squareEntered;
-	cout << newPositionIndex << endl;
-	cout << oldChangedVehiclePositionIndex << endl;
+
 	if (newPositionIndex > oldChangedVehiclePositionIndex) {
 		squareLeft = oldChangedVehiclePosition[0];
 		squareEntered = newChangedVehiclePosition[newChangedVehiclePosition.size() - 1];
@@ -90,8 +90,6 @@ void ArrangementNode::setSquaresOccupationStatus(int changedVehicleIndex, int ne
 		squareEntered = newChangedVehiclePosition[0];
 	}
 
-	cout << "SqrEntered: " << squareEntered << "  " << flush;
-	cout << "SqrLeft: " << squareLeft << "  " << endl;
 	this->squaresOccupationStatus[squareLeft] = 0;
 	this->squaresOccupationStatus[squareEntered] = 1;
 }
@@ -291,13 +289,14 @@ ArrangementNode ArrangementNode::returnChildArrangementNode(int changedVehicleIn
 
 
 ArrangementNode ArrangementNode::returnNextArrangement() {
-
 	visitedIndicesCombos.push_back(vehiclePositionIndices);
 	vector<int> infoForNextMove = this->returnInfoForNextMove();
 //	if (infoForNextMove[1] == 0) {
-//		return this->parent;
+		this->vehiclePositionIndicesStack.pop_back();
+//
 //	}
 
+	this->vehiclePositionIndicesStack.push_back(this->vehiclePositionIndices);
 	ArrangementNode childNode = this->returnChildArrangementNode(infoForNextMove[0], infoForNextMove[1]);
 	return childNode;
 }
@@ -337,6 +336,13 @@ void ArrangementNode::printNode() {
 	for (int visitedCtr = 0; visitedCtr < visitedIndicesCombos.size(); visitedCtr++) {
 		for (int vehicleCtr = 0; vehicleCtr < this->vehiclePositionIndices.size(); vehicleCtr++) {
 			cout << visitedIndicesCombos[visitedCtr][vehicleCtr] << flush;
+		}
+		cout << "  " << flush;
+	}
+	cout << endl << "vehiclePositionIndicesStack: " << flush;
+	for (int stackCtr = 0; stackCtr < vehiclePositionIndicesStack.size(); stackCtr++) {
+		for (int vehicleCtr = 0; vehicleCtr < this->vehiclePositionIndices.size(); vehicleCtr++) {
+			cout << vehiclePositionIndicesStack[stackCtr][vehicleCtr] << flush;
 		}
 		cout << "  " << flush;
 	}
