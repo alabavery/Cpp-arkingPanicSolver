@@ -56,7 +56,10 @@ private:
 public:
 	static vector< vector<int> > vehiclePositionIndicesStack;
 
-	ArrangementNode(vector< vector< vector<int> > > allAchievablePositions, vector<int> vehiclePositionIndices, vector<int> squaresOccupationStatus);
+	ArrangementNode(vector< vector< vector<int> > > allAchievablePositions, vector<int> vehiclePositionIndices);
+
+	vector<int> getSqrOccStatusFromPositionIndices(vector<int> vehiclePositionIndices);
+
 
 	ArrangementNode returnNextArrangement();
 
@@ -64,7 +67,6 @@ public:
 
 	int level;
 
-	ArrangementNode(vector<int> parentPositionIndices, vector<int> parentSquaresOccupationStatus, vector< vector< vector<int> > > allAchievablePositions, vector<int> vehiclePositionIndices, vector<int> squaresOccupationStatus);
 	vector<int> parentPositionIndices;
 	vector<int> parentSquaresOccupationStatus;
 };

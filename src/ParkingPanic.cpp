@@ -29,13 +29,12 @@ int main() {
 	vector<int> initialVehiclePositionIndices = returnInitialVehiclePositionIndices(allVehicles);
 
 
-	ArrangementNode activeArrangement = ArrangementNode(allAchievablePositions, initialVehiclePositionIndices, initialSquaresOccupationStatus);
+	ArrangementNode activeArrangement = ArrangementNode(allAchievablePositions, initialVehiclePositionIndices);
 	activeArrangement.printNode();
 	activeArrangement = activeArrangement.returnNextArrangement();
 	activeArrangement.printNode();
 	activeArrangement = activeArrangement.returnNextArrangement();
 	activeArrangement.printNode();
-
 
 //	while (activeArrangement.level != 2) {
 //		activeArrangement = activeArrangement.returnNextArrangement();

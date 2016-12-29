@@ -21,17 +21,33 @@ vector< vector<int> > ArrangementNode::vehiclePositionIndicesStack;
 
 
 
-ArrangementNode::ArrangementNode(vector< vector< vector<int> > > allAchievablePositions, vector<int> vehiclePositionIndices, vector<int> squaresOccupationStatus) {
+
+ArrangementNode::ArrangementNode(vector< vector< vector<int> > > allAchievablePositions, vector<int> vehiclePositionIndices) {
 	this->allAchievablePositions = allAchievablePositions;
 	this->vehiclePositionIndices = vehiclePositionIndices;
 	this->level = vehiclePositionIndices[0];
-	this->squaresOccupationStatus = squaresOccupationStatus;
+
+	this->squaresOccupationStatus = this->getSqrOccStatusFromPositionIndices(vehiclePositionIndices);
 }
 
 
 
 
+vector<int> ArrangementNode::getSqrOccStatusFromPositionIndices(vector<int> vehiclePositionIndices) {
+	vector<int> squaresOccupationStatus;
+	for (int squareCtr = 0; squareCtr < 36; squareCtr++) {
+		squaresOccupationStatus.push_back(0);
+	}
+	for (int vehicleCtr = 0; vehicleCtr < vehiclePositionIndices.size(); vehicleCtr++) {
+		vector< vector<int> > thisVehicleAchievablePositions = this->allAchievablePositions[vehicleCtr];
+		vector <int> thisVehiclePosition = thisVehicleAchievablePositions[vehiclePositionIndices[vehicleCtr]];
+		for (int squareCtr = 0; squareCtr < thisVehiclePosition.size(); squareCtr++) {
+			squaresOccupationStatus[thisVehiclePosition[squareCtr]] = 1;
+		}
+	}
 
+	return squaresOccupationStatus;
+}
 
 
 
@@ -41,9 +57,9 @@ ArrangementNode::ArrangementNode(vector< vector< vector<int> > > allAchievablePo
 
 void ArrangementNode::moveVehicle(int changedVehicleIndex, int moveDirection) {
 	int newPositionIndex = this->vehiclePositionIndices[changedVehicleIndex] + moveDirection;
-	this->setSquaresOccupationStatus(changedVehicleIndex, newPositionIndex);
-	//crucial that setVehiclePositionIndices() come AFTER setSquaresOccupationStatus()
 	this->setVehiclePositionIndices(changedVehicleIndex, newPositionIndex);
+
+	this->squaresOccupationStatus = this->getSqrOccStatusFromPositionIndices(this->vehiclePositionIndices);
 }
 
 
@@ -73,26 +89,26 @@ void ArrangementNode::setVehiclePositionIndices(int changedVehicleIndex, int new
 
 
 
-
-void ArrangementNode::setSquaresOccupationStatus(int changedVehicleIndex, int newPositionIndex) {
-
-	int oldChangedVehiclePositionIndex = this->vehiclePositionIndices[changedVehicleIndex];
-	vector <int> oldChangedVehiclePosition = this->allAchievablePositions[changedVehicleIndex][oldChangedVehiclePositionIndex];
-	vector <int> newChangedVehiclePosition = this->allAchievablePositions[changedVehicleIndex][newPositionIndex];
-	int squareLeft;
-	int squareEntered;
-
-	if (newPositionIndex > oldChangedVehiclePositionIndex) {
-		squareLeft = oldChangedVehiclePosition[0];
-		squareEntered = newChangedVehiclePosition[newChangedVehiclePosition.size() - 1];
-	} else {
-		squareLeft = oldChangedVehiclePosition[oldChangedVehiclePosition.size() - 1];
-		squareEntered = newChangedVehiclePosition[0];
-	}
-
-	this->squaresOccupationStatus[squareLeft] = 0;
-	this->squaresOccupationStatus[squareEntered] = 1;
-}
+//
+//void ArrangementNode::setSquaresOccupationStatus(int changedVehicleIndex, int newPositionIndex) {
+//
+//	int oldChangedVehiclePositionIndex = this->vehiclePositionIndices[changedVehicleIndex];
+//	vector <int> oldChangedVehiclePosition = this->allAchievablePositions[changedVehicleIndex][oldChangedVehiclePositionIndex];
+//	vector <int> newChangedVehiclePosition = this->allAchievablePositions[changedVehicleIndex][newPositionIndex];
+//	int squareLeft;
+//	int squareEntered;
+//
+//	if (newPositionIndex > oldChangedVehiclePositionIndex) {
+//		squareLeft = oldChangedVehiclePosition[0];
+//		squareEntered = newChangedVehiclePosition[newChangedVehiclePosition.size() - 1];
+//	} else {
+//		squareLeft = oldChangedVehiclePosition[oldChangedVehiclePosition.size() - 1];
+//		squareEntered = newChangedVehiclePosition[0];
+//	}
+//
+//	this->squaresOccupationStatus[squareLeft] = 0;
+//	this->squaresOccupationStatus[squareEntered] = 1;
+//}
 
 
 
@@ -266,15 +282,15 @@ vector<int> ArrangementNode::returnInfoForNextMove() {
 
 
 
-ArrangementNode ArrangementNode::returnChildArrangementNode(int changedVehicleIndex, int moveDirection) {
-	// ArrangementNode childArrangementNode = ArrangementNode(this, this->allAchievablePositions, this->vehiclePositionIndices, this->squaresOccupationStatus);
-
-
-	ArrangementNode childArrangementNode = ArrangementNode(this->allAchievablePositions, this->vehiclePositionIndices, this->squaresOccupationStatus);
-
-	childArrangementNode.moveVehicle(changedVehicleIndex, moveDirection);
-	return childArrangementNode;
-}
+//ArrangementNode ArrangementNode::returnChildArrangementNode(int changedVehicleIndex, int moveDirection) {
+//	// ArrangementNode childArrangementNode = ArrangementNode(this, this->allAchievablePositions, this->vehiclePositionIndices, this->squaresOccupationStatus);
+//
+//
+//	ArrangementNode childArrangementNode = ArrangementNode(this->allAchievablePositions, this->vehiclePositionIndices, this->squaresOccupationStatus);
+//
+//	childArrangementNode.moveVehicle(changedVehicleIndex, moveDirection);
+//	return childArrangementNode;
+//}
 
 
 
@@ -289,16 +305,20 @@ ArrangementNode ArrangementNode::returnChildArrangementNode(int changedVehicleIn
 
 
 ArrangementNode ArrangementNode::returnNextArrangement() {
-	visitedIndicesCombos.push_back(vehiclePositionIndices);
-	vector<int> infoForNextMove = this->returnInfoForNextMove();
-//	if (infoForNextMove[1] == 0) {
-		this->vehiclePositionIndicesStack.pop_back();
-//
-//	}
 
-	this->vehiclePositionIndicesStack.push_back(this->vehiclePositionIndices);
-	ArrangementNode childNode = this->returnChildArrangementNode(infoForNextMove[0], infoForNextMove[1]);
-	return childNode;
+	visitedIndicesCombos.push_back(vehiclePositionIndices);
+
+	vector<int> infoForNextMove = this->returnInfoForNextMove();
+	if (infoForNextMove[1] == 0) {
+		vector<int> previousVehiclePositionIndices = this->vehiclePositionIndicesStack[this->vehiclePositionIndicesStack.size() - 1];
+		ArrangementNode nextArrangement = ArrangementNode(this->allAchievablePositions, previousVehiclePositionIndices);
+		this->vehiclePositionIndicesStack.pop_back();
+		return nextArrangement;
+	} else {
+		this->vehiclePositionIndicesStack.push_back(this->vehiclePositionIndices);
+		this->moveVehicle(infoForNextMove[0], infoForNextMove[1]);
+		return *this;
+	}
 }
 
 
