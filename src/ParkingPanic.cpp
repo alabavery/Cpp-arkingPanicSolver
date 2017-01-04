@@ -27,46 +27,57 @@ string intVectorToString(vector<int> intVector) {
 	return indicesStream.str();
 }
 
-
-int main() {
-
-	VehicleStartDataTxt vehicleStartDataTxt = VehicleStartDataTxt("level1.txt");
-	vector< vector<int> > vehicleStartPositions = vehicleStartDataTxt.getVehicleStartPositions();
-
-
-	vector<Vehicle> allVehicles = createAllVehicles(vehicleStartPositions);
+void writeAchievablePositionsToTxt(string txtFilePath, vector<Vehicle> allVehicles) {
 	ofstream achievablePositionFile;
-	achievablePositionFile.open("achievablePositionsWriteFile.txt");
+	achievablePositionFile.open(txtFilePath);
 	for (int vehicleCtr = 0; vehicleCtr < allVehicles.size(); vehicleCtr++) {
 		achievablePositionFile << allVehicles[vehicleCtr].returnAchievablePositionsString();
 	}
 	achievablePositionFile.close();
+}
+
+
+int main() {
+
+
+	// Preparation Steps
+	VehicleStartDataTxt vehicleStartDataTxt = VehicleStartDataTxt("level1.txt");
+
+	vector< vector<int> > vehicleStartPositions = vehicleStartDataTxt.getVehicleStartPositions();
+
+	vector<Vehicle> allVehicles = createAllVehicles(vehicleStartPositions);
 
 	vector< vector< vector<int> > > allAchievablePositions = getAllAchievablePositions(allVehicles);
 
+	writeAchievablePositionsToTxt("achievablePositionsWriteFile.txt", allVehicles);
+
 	vector<int> initialSquaresOccupationStatus = returnInitialSquaresOccupationStatus(vehicleStartPositions);
+
 	vector<int> initialVehiclePositionIndices = returnInitialVehiclePositionIndices(allVehicles);
+	// end prep steps
 
 
+
+	// Obtain sequence of arrangements that go from start to finish
 	ArrangementNode activeArrangement = ArrangementNode(allAchievablePositions, initialVehiclePositionIndices);
-
-	ofstream myfile;
-	myfile.open("arrangementSequenceWriteFile.txt");
-
 	vector< vector<int> > unoptimizedSequence;
 	while (activeArrangement.level != 4) {
 		unoptimizedSequence.push_back(activeArrangement.vehiclePositionIndices);
 		activeArrangement = activeArrangement.returnNextArrangement();
-//		myfile << activeArrangement.positionIndicesToString();
-//		myfile << "\n";
 	}
+	// end obtaining sequence of arrangements that go from start to finish
 
 
+	// refine the sequence of arrangements to only necessary steps; write to txt file
+	ofstream arrangementSequenceFileStream;
+	arrangementSequenceFileStream.open("arrangementSequenceWriteFile.txt");
 	vector< vector<int> > optimizedSequence = refineSequenceOfPositionIndices(unoptimizedSequence);
 	for (int i = 0; i < optimizedSequence.size(); i++) {
-		myfile << intVectorToString(optimizedSequence[i]);
-		myfile << "\n";
+		arrangementSequenceFileStream << intVectorToString(optimizedSequence[i]);
+		arrangementSequenceFileStream << "\n";
 	}
-	myfile.close();
+	arrangementSequenceFileStream.close();
+	// end refine the sequence of arrangements to only necessary steps
+
 	return 0;
 }
