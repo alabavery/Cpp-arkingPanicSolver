@@ -6,6 +6,7 @@
  */
 
 #include <vector>
+#include <fstream>
 using namespace std;
 
 #ifndef VEHICLE_H_
@@ -46,6 +47,8 @@ public:
 	int getStartingPositionIndex();
 
 	vector <vector<int> > getAchievablePositions();
+
+	string returnAchievablePositionsString();
 
 	void printVehicle();
 };

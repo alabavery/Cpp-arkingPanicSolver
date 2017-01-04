@@ -9,13 +9,21 @@ using namespace std;
 
 #include "ArrangementNode.h"
 
-
+#include <sstream>
 
 
 vector< vector<int> > ArrangementNode::visitedIndicesCombos;
 vector< vector<int> > ArrangementNode::vehiclePositionIndicesStack;
 
 
+
+string ArrangementNode::positionIndicesToString() {
+	ostringstream indicesStream;
+	for (int vehicleCtr = 0; vehicleCtr < this->vehiclePositionIndices.size(); vehicleCtr++) {
+		indicesStream << this->vehiclePositionIndices[vehicleCtr];
+	}
+	return indicesStream.str();
+}
 
 
 
@@ -124,7 +132,6 @@ void ArrangementNode::setVehiclePositionIndices(int changedVehicleIndex, int new
 
 bool ArrangementNode::testForVisited(int changedVehicleIndex, int newPositionIndex) {
 
-	// make a copy of this->vehiclePositionIndices except with the changed Vehicle's index at its new value
 	vector<int> positionIndicesToTest;
 	for (int vehicleCtr = 0; vehicleCtr < this->vehiclePositionIndices.size(); vehicleCtr++) {
 		if (vehicleCtr == changedVehicleIndex) {
@@ -135,6 +142,11 @@ bool ArrangementNode::testForVisited(int changedVehicleIndex, int newPositionInd
 	}
 
 	// if positionIndicesToTest in this->visitedIndicesCombo, return false
+	for (int visitedCtr = 0; visitedCtr < this->visitedIndicesCombos.size(); visitedCtr++) {
+		if (positionIndicesToTest == this->visitedIndicesCombos[visitedCtr]) {
+			return false;
+		}
+	}
 	return true;
 }
 
@@ -282,15 +294,12 @@ vector<int> ArrangementNode::returnInfoForNextMove() {
 
 
 
-//ArrangementNode ArrangementNode::returnChildArrangementNode(int changedVehicleIndex, int moveDirection) {
-//	// ArrangementNode childArrangementNode = ArrangementNode(this, this->allAchievablePositions, this->vehiclePositionIndices, this->squaresOccupationStatus);
-//
-//
-//	ArrangementNode childArrangementNode = ArrangementNode(this->allAchievablePositions, this->vehiclePositionIndices, this->squaresOccupationStatus);
-//
-//	childArrangementNode.moveVehicle(changedVehicleIndex, moveDirection);
-//	return childArrangementNode;
-//}
+ArrangementNode ArrangementNode::returnNewArrangementNode(int changedVehicleIndex, int moveDirection) {
+	ArrangementNode newArrangementNode = ArrangementNode(this->allAchievablePositions, this->vehiclePositionIndices);
+
+	newArrangementNode.moveVehicle(changedVehicleIndex, moveDirection);
+	return newArrangementNode;
+}
 
 
 
@@ -310,14 +319,16 @@ ArrangementNode ArrangementNode::returnNextArrangement() {
 
 	vector<int> infoForNextMove = this->returnInfoForNextMove();
 	if (infoForNextMove[1] == 0) {
+
 		vector<int> previousVehiclePositionIndices = this->vehiclePositionIndicesStack[this->vehiclePositionIndicesStack.size() - 1];
-		ArrangementNode nextArrangement = ArrangementNode(this->allAchievablePositions, previousVehiclePositionIndices);
+		ArrangementNode previousArrangement = ArrangementNode(this->allAchievablePositions, previousVehiclePositionIndices);
+
 		this->vehiclePositionIndicesStack.pop_back();
-		return nextArrangement;
+		return previousArrangement;
+
 	} else {
 		this->vehiclePositionIndicesStack.push_back(this->vehiclePositionIndices);
-		this->moveVehicle(infoForNextMove[0], infoForNextMove[1]);
-		return *this;
+		return this->returnNewArrangementNode(infoForNextMove[0], infoForNextMove[1]);
 	}
 }
 

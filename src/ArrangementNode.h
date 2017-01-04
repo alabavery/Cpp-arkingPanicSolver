@@ -22,8 +22,6 @@ private:
 
 	static vector< vector<int> > visitedIndicesCombos;
 
-	vector<int> vehiclePositionIndices;
-
 	vector<int> squaresOccupationStatus;
 
 
@@ -46,7 +44,7 @@ private:
 
 
 
-	ArrangementNode returnChildArrangementNode(int changedVehicleIndex, int moveDirection);
+	ArrangementNode returnNewArrangementNode(int changedVehicleIndex, int moveDirection);
 
 	vector<int> returnInfoForNextMove();
 
@@ -54,6 +52,10 @@ private:
 
 
 public:
+	vector<int> vehiclePositionIndices;
+
+	string positionIndicesToString();
+
 	static vector< vector<int> > vehiclePositionIndicesStack;
 
 	ArrangementNode(vector< vector< vector<int> > > allAchievablePositions, vector<int> vehiclePositionIndices);

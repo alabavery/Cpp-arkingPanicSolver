@@ -8,6 +8,8 @@
 #include <vector>
 # include "Vehicle.h"
 
+# include <sstream>
+
 using namespace std;
 
 
@@ -146,7 +148,17 @@ void Vehicle::printVehicle() {
 
 
 
-
+string Vehicle::returnAchievablePositionsString() {
+	ostringstream oss;
+	for (int positionCounter = 0; positionCounter < 7 - this->vehicleLength; positionCounter++) {
+		for (int squareCounter = 0; squareCounter < this->vehicleLength; squareCounter++) {
+			oss << this->achievablePositions[positionCounter][squareCounter] << " ";
+		}
+		oss << "|";
+	}
+	oss << "\n";
+	return oss.str();
+}
 
 
 

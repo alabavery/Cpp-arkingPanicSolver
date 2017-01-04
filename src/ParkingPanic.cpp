@@ -8,12 +8,25 @@
 
 #include <iostream>
 #include <vector>
+#include <fstream>
+#include <sstream>
 
 #include "ArrangementNode.h"
 #include "VehicleStartDataTxt.h"
 #include "Vehicle.h"
+#include "refineArrangementSequence.cpp"
 
 using namespace std;
+
+
+string intVectorToString(vector<int> intVector) {
+	ostringstream indicesStream;
+	for (int intCtr = 0; intCtr < intVector.size(); intCtr++) {
+		indicesStream << intVector[intCtr];
+	}
+	return indicesStream.str();
+}
+
 
 int main() {
 
@@ -22,6 +35,12 @@ int main() {
 
 
 	vector<Vehicle> allVehicles = createAllVehicles(vehicleStartPositions);
+	ofstream achievablePositionFile;
+	achievablePositionFile.open("achievablePositionsWriteFile.txt");
+	for (int vehicleCtr = 0; vehicleCtr < allVehicles.size(); vehicleCtr++) {
+		achievablePositionFile << allVehicles[vehicleCtr].returnAchievablePositionsString();
+	}
+	achievablePositionFile.close();
 
 	vector< vector< vector<int> > > allAchievablePositions = getAllAchievablePositions(allVehicles);
 
@@ -30,16 +49,24 @@ int main() {
 
 
 	ArrangementNode activeArrangement = ArrangementNode(allAchievablePositions, initialVehiclePositionIndices);
-	activeArrangement.printNode();
-	activeArrangement = activeArrangement.returnNextArrangement();
-	activeArrangement.printNode();
-	activeArrangement = activeArrangement.returnNextArrangement();
-	activeArrangement.printNode();
 
-//	while (activeArrangement.level != 2) {
-//		activeArrangement = activeArrangement.returnNextArrangement();
-//		activeArrangement.printNode();
-//	}
+	ofstream myfile;
+	myfile.open("arrangementSequenceWriteFile.txt");
 
+	vector< vector<int> > unoptimizedSequence;
+	while (activeArrangement.level != 4) {
+		unoptimizedSequence.push_back(activeArrangement.vehiclePositionIndices);
+		activeArrangement = activeArrangement.returnNextArrangement();
+//		myfile << activeArrangement.positionIndicesToString();
+//		myfile << "\n";
+	}
+
+
+	vector< vector<int> > optimizedSequence = refineSequenceOfPositionIndices(unoptimizedSequence);
+	for (int i = 0; i < optimizedSequence.size(); i++) {
+		myfile << intVectorToString(optimizedSequence[i]);
+		myfile << "\n";
+	}
+	myfile.close();
 	return 0;
 }
