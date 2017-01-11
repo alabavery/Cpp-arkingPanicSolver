@@ -389,20 +389,6 @@ void ArrangementNode::printNode() {
 
 
 
-vector<int> returnInitialSquaresOccupationStatus(vector< vector<int> > vehicleStartPositions) {
-	vector<int> squaresOccupationStatus;
-	for (int squareCtr = 0; squareCtr < 36; squareCtr++) {
-		squaresOccupationStatus.push_back(0);
-	}
-	for (int vehicleCtr = 0; vehicleCtr < vehicleStartPositions.size(); vehicleCtr++) {
-		for (int squareCtr = 0; squareCtr < vehicleStartPositions[vehicleCtr].size(); squareCtr++) {
-			squaresOccupationStatus[vehicleStartPositions[vehicleCtr][squareCtr]] = 1;
-		}
-	}
-
-	return squaresOccupationStatus;
-}
-
 
 
 

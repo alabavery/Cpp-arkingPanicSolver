@@ -79,9 +79,6 @@ public:
 
 
 
-
-vector<int> returnInitialSquaresOccupationStatus(vector< vector<int> > vehicleStartPositions);
-
 vector<int> returnInitialVehiclePositionIndices(vector<Vehicle> vehicles);
 
 vector< vector<int> > returnUnoptimizedSequenceOfPositionIndices(vector< vector< vector<int> > > allAchievablePositions, vector<int> initialVehiclePositionIndices);
