@@ -36,7 +36,6 @@ int main() {
 	vector< vector< vector<int> > > allAchievablePositions = getAllAchievablePositions(allVehicles);
 	writeAchievablePositionsToTxt("achievablePositionsWriteFile.txt", allVehicles);
 
-	vector<int> initialSquaresOccupationStatus = returnInitialSquaresOccupationStatus(vehicleStartPositions);
 	vector<int> initialVehiclePositionIndices = returnInitialVehiclePositionIndices(allVehicles);
 
 
