@@ -84,6 +84,6 @@ vector<int> returnInitialSquaresOccupationStatus(vector< vector<int> > vehicleSt
 
 vector<int> returnInitialVehiclePositionIndices(vector<Vehicle> vehicles);
 
-
+vector< vector<int> > returnUnoptimizedSequenceOfPositionIndices(vector< vector< vector<int> > > allAchievablePositions, vector<int> initialVehiclePositionIndices);
 
 #endif /* ARRANGEMENTNODE_H_ */

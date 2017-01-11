@@ -28,34 +28,19 @@ void writeAchievablePositionsToTxt(string txtFilePath, vector<Vehicle> allVehicl
 
 int main() {
 
-
-	// Preparation Steps
 	VehicleStartDataTxt vehicleStartDataTxt = VehicleStartDataTxt("level1.txt");
-
 	vector< vector<int> > vehicleStartPositions = vehicleStartDataTxt.getVehicleStartPositions();
 
 	vector<Vehicle> allVehicles = createAllVehicles(vehicleStartPositions);
 
 	vector< vector< vector<int> > > allAchievablePositions = getAllAchievablePositions(allVehicles);
-
 	writeAchievablePositionsToTxt("achievablePositionsWriteFile.txt", allVehicles);
 
 	vector<int> initialSquaresOccupationStatus = returnInitialSquaresOccupationStatus(vehicleStartPositions);
-
 	vector<int> initialVehiclePositionIndices = returnInitialVehiclePositionIndices(allVehicles);
-	// end prep steps
 
 
-
-	// Obtain sequence of arrangements that go from start to finish
-	ArrangementNode activeArrangement = ArrangementNode(allAchievablePositions, initialVehiclePositionIndices);
-	vector< vector<int> > unoptimizedSequence;
-	while (activeArrangement.level != 4) {
-		unoptimizedSequence.push_back(activeArrangement.vehiclePositionIndices);
-		activeArrangement = activeArrangement.returnNextArrangement();
-	}
-	// end obtaining sequence of arrangements that go from start to finish
-
+	vector< vector<int> > unoptimizedSequence = returnUnoptimizedSequenceOfPositionIndices(allAchievablePositions, initialVehiclePositionIndices);
 
 	vector< vector<int> > optimizedSequence = refineSequenceOfPositionIndices(unoptimizedSequence);
 	writeArrangementSequenceToFile(optimizedSequence, "arrangementSequenceWriteFile.txt");

@@ -428,3 +428,16 @@ vector<int> returnInitialVehiclePositionIndices(vector<Vehicle> vehicles) {
 
 
 
+
+
+vector< vector<int> > returnUnoptimizedSequenceOfPositionIndices(vector< vector< vector<int> > > allAchievablePositions, vector<int> initialVehiclePositionIndices) {
+
+	ArrangementNode activeArrangement = ArrangementNode(allAchievablePositions, initialVehiclePositionIndices);
+	vector< vector<int> > unoptimizedSequence;
+	while (activeArrangement.level != 4) {
+		unoptimizedSequence.push_back(activeArrangement.vehiclePositionIndices);
+		activeArrangement = activeArrangement.returnNextArrangement();
+	}
+
+	return unoptimizedSequence;
+}
