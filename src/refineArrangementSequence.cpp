@@ -1,5 +1,5 @@
 
-bool directMove(vector<int> positionIndices1, vector<int> positionIndices2) {
+bool testDirectMove(vector<int> positionIndices1, vector<int> positionIndices2) {
 	int numOfDifferences = 0;
 	for (int i = 0; i < positionIndices1.size(); i++) {
 
@@ -22,6 +22,10 @@ bool directMove(vector<int> positionIndices1, vector<int> positionIndices2) {
 
 
 
+
+
+
+
 vector< vector<int> > refineSequenceOfPositionIndices(vector< vector<int> > unoptimizedSequence) {
 
 	vector< vector<int> > optimizedSequence;
@@ -34,7 +38,7 @@ vector< vector<int> > refineSequenceOfPositionIndices(vector< vector<int> > unop
 		if (latestMoveMarker == unoptimizedSequence.size() - 1) {
 			return optimizedSequence;
 		}
-		if (directMove(unoptimizedSequence[latestMoveMarker], unoptimizedSequence[reverseCtr])) {
+		if (testDirectMove(unoptimizedSequence[latestMoveMarker], unoptimizedSequence[reverseCtr])) {
 			optimizedSequence.push_back(unoptimizedSequence[reverseCtr]);
 			latestMoveMarker = reverseCtr;
 			reverseCtr = unoptimizedSequence.size() - 1;
@@ -42,4 +46,30 @@ vector< vector<int> > refineSequenceOfPositionIndices(vector< vector<int> > unop
 			reverseCtr--;
 		}
 	}
+}
+
+
+
+
+
+string intVectorToString(vector<int> intVector) {
+	ostringstream indicesStream;
+	for (int intCtr = 0; intCtr < intVector.size(); intCtr++) {
+		indicesStream << intVector[intCtr];
+	}
+	return indicesStream.str();
+}
+
+
+
+
+
+void writeArrangementSequenceToFile(vector< vector<int> > optimizedSequence, string filePath) {
+	ofstream arrangementSequenceFileStream;
+	arrangementSequenceFileStream.open(filePath);
+	for (int i = 0; i < optimizedSequence.size(); i++) {
+		arrangementSequenceFileStream << intVectorToString(optimizedSequence[i]);
+		arrangementSequenceFileStream << "\n";
+	}
+	arrangementSequenceFileStream.close();
 }

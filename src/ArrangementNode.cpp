@@ -5,11 +5,8 @@
  *      Author: alavery
  */
 #include <iostream>
-using namespace std;
-
-#include "ArrangementNode.h"
-
 #include <sstream>
+#include "ArrangementNode.h"
 
 
 vector< vector<int> > ArrangementNode::visitedIndicesCombos;
@@ -17,13 +14,6 @@ vector< vector<int> > ArrangementNode::vehiclePositionIndicesStack;
 
 
 
-string ArrangementNode::positionIndicesToString() {
-	ostringstream indicesStream;
-	for (int vehicleCtr = 0; vehicleCtr < this->vehiclePositionIndices.size(); vehicleCtr++) {
-		indicesStream << this->vehiclePositionIndices[vehicleCtr];
-	}
-	return indicesStream.str();
-}
 
 
 
@@ -34,9 +24,13 @@ ArrangementNode::ArrangementNode(vector< vector< vector<int> > > allAchievablePo
 	this->allAchievablePositions = allAchievablePositions;
 	this->vehiclePositionIndices = vehiclePositionIndices;
 	this->level = vehiclePositionIndices[0];
-
 	this->squaresOccupationStatus = this->getSqrOccStatusFromPositionIndices(vehiclePositionIndices);
 }
+
+
+
+
+
 
 
 
@@ -56,6 +50,9 @@ vector<int> ArrangementNode::getSqrOccStatusFromPositionIndices(vector<int> vehi
 
 	return squaresOccupationStatus;
 }
+
+
+
 
 
 
@@ -83,6 +80,8 @@ void ArrangementNode::moveVehicle(int changedVehicleIndex, int moveDirection) {
 
 
 
+
+
 void ArrangementNode::setVehiclePositionIndices(int changedVehicleIndex, int newPositionIndex) {
 	this->vehiclePositionIndices[changedVehicleIndex] = newPositionIndex;
 }
@@ -95,28 +94,6 @@ void ArrangementNode::setVehiclePositionIndices(int changedVehicleIndex, int new
 
 
 
-
-
-//
-//void ArrangementNode::setSquaresOccupationStatus(int changedVehicleIndex, int newPositionIndex) {
-//
-//	int oldChangedVehiclePositionIndex = this->vehiclePositionIndices[changedVehicleIndex];
-//	vector <int> oldChangedVehiclePosition = this->allAchievablePositions[changedVehicleIndex][oldChangedVehiclePositionIndex];
-//	vector <int> newChangedVehiclePosition = this->allAchievablePositions[changedVehicleIndex][newPositionIndex];
-//	int squareLeft;
-//	int squareEntered;
-//
-//	if (newPositionIndex > oldChangedVehiclePositionIndex) {
-//		squareLeft = oldChangedVehiclePosition[0];
-//		squareEntered = newChangedVehiclePosition[newChangedVehiclePosition.size() - 1];
-//	} else {
-//		squareLeft = oldChangedVehiclePosition[oldChangedVehiclePosition.size() - 1];
-//		squareEntered = newChangedVehiclePosition[0];
-//	}
-//
-//	this->squaresOccupationStatus[squareLeft] = 0;
-//	this->squaresOccupationStatus[squareEntered] = 1;
-//}
 
 
 
@@ -155,12 +132,17 @@ bool ArrangementNode::testForVisited(int changedVehicleIndex, int newPositionInd
 
 
 
+
+
 bool ArrangementNode::testPositionIndexIsValid(vector< vector<int> > changedVehiclesPositions, int newPositionIndex) {
 	if (newPositionIndex < 0 || newPositionIndex == changedVehiclesPositions.size()) {
 		return false;
 	}
 	return true;
 }
+
+
+
 
 
 
@@ -193,6 +175,7 @@ bool ArrangementNode::testForOccupation(vector< vector<int> > changedVehiclesPos
 
 
 
+
 bool ArrangementNode::testMove(int changedVehicleIndex, int moveDirection) {
 
 	int newPositionIndex = this->vehiclePositionIndices[changedVehicleIndex] + moveDirection;
@@ -207,6 +190,7 @@ bool ArrangementNode::testMove(int changedVehicleIndex, int moveDirection) {
 	}
 	return false;
 }
+
 
 
 
@@ -332,6 +316,21 @@ ArrangementNode ArrangementNode::returnNextArrangement() {
 	}
 }
 
+
+
+
+
+
+
+
+
+string ArrangementNode::positionIndicesToString() {
+	ostringstream indicesStream;
+	for (int vehicleCtr = 0; vehicleCtr < this->vehiclePositionIndices.size(); vehicleCtr++) {
+		indicesStream << this->vehiclePositionIndices[vehicleCtr];
+	}
+	return indicesStream.str();
+}
 
 
 

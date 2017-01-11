@@ -5,9 +5,6 @@
 // Copyright   : Your copyright notice
 // Description : Hello World in C++, Ansi-style
 //============================================================================
-
-#include <iostream>
-#include <vector>
 #include <fstream>
 #include <sstream>
 
@@ -16,16 +13,8 @@
 #include "Vehicle.h"
 #include "refineArrangementSequence.cpp"
 
-using namespace std;
 
 
-string intVectorToString(vector<int> intVector) {
-	ostringstream indicesStream;
-	for (int intCtr = 0; intCtr < intVector.size(); intCtr++) {
-		indicesStream << intVector[intCtr];
-	}
-	return indicesStream.str();
-}
 
 void writeAchievablePositionsToTxt(string txtFilePath, vector<Vehicle> allVehicles) {
 	ofstream achievablePositionFile;
@@ -68,16 +57,8 @@ int main() {
 	// end obtaining sequence of arrangements that go from start to finish
 
 
-	// refine the sequence of arrangements to only necessary steps; write to txt file
-	ofstream arrangementSequenceFileStream;
-	arrangementSequenceFileStream.open("arrangementSequenceWriteFile.txt");
 	vector< vector<int> > optimizedSequence = refineSequenceOfPositionIndices(unoptimizedSequence);
-	for (int i = 0; i < optimizedSequence.size(); i++) {
-		arrangementSequenceFileStream << intVectorToString(optimizedSequence[i]);
-		arrangementSequenceFileStream << "\n";
-	}
-	arrangementSequenceFileStream.close();
-	// end refine the sequence of arrangements to only necessary steps
+	writeArrangementSequenceToFile(optimizedSequence, "arrangementSequenceWriteFile.txt");
 
 	return 0;
 }

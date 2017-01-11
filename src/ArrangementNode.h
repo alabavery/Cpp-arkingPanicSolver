@@ -6,7 +6,7 @@
  */
 #include <vector>
 #include "Vehicle.h"
-using namespace std;
+
 
 #ifndef ARRANGEMENTNODE_H_
 #define ARRANGEMENTNODE_H_
