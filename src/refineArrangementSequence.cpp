@@ -1,3 +1,17 @@
+/*
+ * writeArrangementSequenceToFile() (see function body below) writes to a text file the information
+ * needed to describe the sequence of vehicle arrangements that take the parking lot
+ * from its starting arrangement to an arrangement in which the hero vehicle is
+ * exiting.  That information is in the form of a sequence of vehicle position indices.
+ * Each line in the written text file is the position indices for one arrangement.  From one
+ * line in the file to the next, exactly one position index will have changed.
+ *
+ * Combining the file written by writeArrangementSequenceToFile() and the file written by
+ * writeAchievablePositionsToTxtFile() (see ParkingPanic.cpp for that function), the Python
+ * script has enough information to display the solution to the level.
+ */
+
+
 
 bool testDirectMove(vector<int> positionIndices1, vector<int> positionIndices2) {
 	int numOfDifferences = 0;
@@ -19,6 +33,8 @@ bool testDirectMove(vector<int> positionIndices1, vector<int> positionIndices2) 
 	}
 	return true;
 }
+
+
 
 
 
@@ -52,6 +68,10 @@ vector< vector<int> > refineSequenceOfPositionIndices(vector< vector<int> > unop
 
 
 
+
+
+
+
 string intVectorToString(vector<int> intVector) {
 	ostringstream indicesStream;
 	for (int intCtr = 0; intCtr < intVector.size(); intCtr++) {
@@ -59,6 +79,10 @@ string intVectorToString(vector<int> intVector) {
 	}
 	return indicesStream.str();
 }
+
+
+
+
 
 
 
